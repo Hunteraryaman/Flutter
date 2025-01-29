@@ -30,11 +30,12 @@ class ExpensesItem extends StatelessWidget {
                   const Spacer(), //this is a widget that takes all the remaining space after the space for the diff widgets have been alocagted
                   Row(
                     children: [
-                      const Icon(Icons.abc_outlined),
+                      Icon(categoryItems[expense.category]),
                       const SizedBox(
                         width: 8,
                       ),
-                      Text(expense.date.toString())
+                      Text(expense
+                          .formatedDate), //this is getter so no parenthesis
                     ],
                   )
                 ],

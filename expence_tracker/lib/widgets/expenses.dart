@@ -1,5 +1,6 @@
 import 'package:expence_tracker/widgets/expenses_list/expenses_list.dart';
 import 'package:expence_tracker/models/expense.dart';
+import 'package:expence_tracker/widgets/new_expence.dart';
 import 'package:flutter/material.dart';
 
 class Expenses extends StatefulWidget {
@@ -30,12 +31,26 @@ class _ExpencesState extends State<Expenses> {
         date: DateTime.now()),
   ];
 
+  void _openAddExpenceOverlay() {
+    showModalBottomSheet(
+      context: context,
+      builder: (ctx) => const NewExpence(),
+    );
+    //context is a a kind of metadata //it holds the position of the widget
+    //ctx is context of modal bottom
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Expence Tracker'),
-        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.add))],
+        actions: [
+          IconButton(
+            onPressed: _openAddExpenceOverlay,
+            icon: const Icon(Icons.add),
+          )
+        ],
       ),
       body: Column(
         children: [
