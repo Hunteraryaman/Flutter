@@ -33,11 +33,20 @@ class _ExpencesState extends State<Expenses> {
 
   void _openAddExpenceOverlay() {
     showModalBottomSheet(
+      isScrollControlled: true,//this makes it fullscreen
       context: context,
-      builder: (ctx) => const NewExpence(),
+      builder: (ctx) => NewExpence(
+        onAddExpense: _addExpense,
+      ),
     );
     //context is a a kind of metadata //it holds the position of the widget
     //ctx is context of modal bottom
+  }
+
+  void _addExpense(Expense expense) {
+    setState(() {
+      _registerExpences.add(expense);
+    });
   }
 
   @override
