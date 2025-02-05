@@ -33,7 +33,7 @@ class _ExpencesState extends State<Expenses> {
 
   void _openAddExpenceOverlay() {
     showModalBottomSheet(
-      isScrollControlled: true,//this makes it fullscreen
+      isScrollControlled: true, //this makes it fullscreen
       context: context,
       builder: (ctx) => NewExpence(
         onAddExpense: _addExpense,
@@ -49,8 +49,49 @@ class _ExpencesState extends State<Expenses> {
     });
   }
 
+  void _removeExpence(Expense expense) {
+    final index = _registerExpences.indexOf(expense);
+    setState(() {
+      _registerExpences.remove(expense);
+    });
+    //this is a specisal object ehich is used to show or hide certain ui elements
+    //of is its method
+    //snackbar is a info message shown on screen
+    ScaffoldMessenger.of(context).clearSnackBars();
+    //this removes the previous snack bars if any
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Expence deleted.'),
+        duration: const Duration(seconds: 3),
+        action: SnackBarAction(
+          label: 'Undo',
+          // onPressed: () => _addExpense(expense),
+          onPressed: () {
+            setState(() {
+              _registerExpences.insert(index, expense);
+              //this adds at a specific position
+            });
+          },
+        ),
+        // shape:  BeveledRectangleBorder(borderRadius: BorderRadius.all(30 as Radius)),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    Widget mainContent = const Center(
+      child: Text(
+        'No Expence in the list please add some',
+      ),
+    );
+
+    if (_registerExpences.isNotEmpty) {
+      mainContent = ExpensesList(
+        expenses: _registerExpences,
+        onRemoveExpence: _removeExpence,
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text('Expence Tracker'),
@@ -65,7 +106,7 @@ class _ExpencesState extends State<Expenses> {
         children: [
           const Text('chart'),
           Expanded(
-            child: ExpensesList(expenses: _registerExpences),
+            child: mainContent,
           ),
           //expanded restricts the size to the size of the parent column
           //this displays a column which makes it a column inside a column

@@ -120,6 +120,7 @@ class _NewExpenceState extends State<NewExpence> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 48, 16, 16),
+      //this 48 is to manage the spacing in the top
       child: Column(
         children: [
           TextField(
