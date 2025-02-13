@@ -23,7 +23,7 @@ class _NewExpenceState extends State<NewExpence> {
 
   final _titleControler = TextEditingController();
   final _amountControler = TextEditingController();
-  DateTime? _selectedDate;
+  DateTime? _selectedDate = DateTime.now();
   Category _selectedCategory = Category.food;
 
   void _presentDatePicker() async {
@@ -70,7 +70,7 @@ class _NewExpenceState extends State<NewExpence> {
         context: context,
         builder: (ctx) => AlertDialog(
           title: const Text('Invalid input'),
-          content: const Text('Please make sure all items are entered'),
+          content: const Text('Please make sure all items are entered',),
           actions: [
             TextButton(
               onPressed: () {
@@ -161,9 +161,17 @@ class _NewExpenceState extends State<NewExpence> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(_selectedDate == null
-                        ? 'No Selected data'
-                        : formater.format(_selectedDate!)),
+                    Text(
+                      _selectedDate == null
+                          ? 'No Selected data'
+                          : formater.format(_selectedDate!),
+                      style: TextStyle(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .error
+                            .withValues(alpha: 0.7),
+                      ),
+                    ),
                     // ! tells dart that the value will never be null
                     IconButton(
                       onPressed: _presentDatePicker,
@@ -193,7 +201,16 @@ class _NewExpenceState extends State<NewExpence> {
                           //child defines what will be shown on the screen
                           //value is used to store the selected value it is only stored internally
                           value: category,
-                          child: Text(category.name.toUpperCase()),
+                          child: Text(
+                            category.name.toUpperCase(),
+                            style: Theme.of(context).textTheme.bodyLarge,
+                            // .copyWith(
+                            // color:
+                            // const Color.fromARGB(122, 254, 254, 254),
+                            // Theme.of(context).colorScheme.error.withValues(alpha: 0.7),
+                            //colorScheme.onSurface,
+                            // ),
+                          ),
                           //name gives the string value of the category enum
                         ),
                       )

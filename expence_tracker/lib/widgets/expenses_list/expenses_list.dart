@@ -1,4 +1,4 @@
-import 'package:expence_tracker/main.dart';
+// import 'package:expence_tracker/main.dart';
 import 'package:expence_tracker/models/expense.dart';
 import 'package:expence_tracker/widgets/expenses_list/expenses_item.dart';
 import 'package:flutter/material.dart';
@@ -22,10 +22,14 @@ class ExpensesList extends StatelessWidget {
         // itemBuilder: (ctx, index) => Text(expences[index].title),
         itemBuilder: (ctx, index) => Dismissible(
               background: Container(
-                color: Theme.of(context).colorScheme.error.withOpacity(0.7),
+                // color: Theme.of(context).colorScheme.error.withOpacity(0.7),
+                color:
+                    Theme.of(context).colorScheme.error.withValues(alpha: 0.7),
+                //opacity is depriciated so i am using this withValues
                 // color: kColorScheme.error,
                 margin: EdgeInsets.symmetric(
                   horizontal: Theme.of(context).cardTheme.margin!.horizontal,
+                  //this is done to only access the horizontal theme and set it as an value here
                 ),
               ),
               key: ValueKey(

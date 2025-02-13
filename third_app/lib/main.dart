@@ -15,7 +15,7 @@ void main() {
           // Color.fromARGB(120, 180, 0, 0),
           // Color.fromARGB(198, 244, 2, 2),
           colors: [
-            Color.fromARGB(255, 176, 25, 25),
+            Color.fromARGB(255, 223, 100, 100),
             Color.fromARGB(120, 180, 0, 0),
             Color.fromARGB(198, 244, 2, 2)
           ]

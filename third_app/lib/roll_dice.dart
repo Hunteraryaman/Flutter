@@ -1,9 +1,6 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
-
 final randomizer = Random(); //thisi is a global variable
-
 class RollDice extends StatefulWidget {
   const RollDice({super.key});
   @override
@@ -11,10 +8,8 @@ class RollDice extends StatefulWidget {
     return _RollDiceState();
   }
 }
-
 class _RollDiceState extends State<RollDice> {
   //the _ in the begining means that this is a private class of this file
-
   // var activeDice = 'assets/images/dice-4.png';
   var currentDice1 = 1;
   var currentDice2 = 2;

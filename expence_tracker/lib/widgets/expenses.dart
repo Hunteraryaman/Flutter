@@ -1,3 +1,5 @@
+import 'package:expence_tracker/main.dart';
+import 'package:expence_tracker/widgets/chart/chart.dart';
 import 'package:expence_tracker/widgets/expenses_list/expenses_list.dart';
 import 'package:expence_tracker/models/expense.dart';
 import 'package:expence_tracker/widgets/new_expence.dart';
@@ -94,7 +96,16 @@ class _ExpencesState extends State<Expenses> {
     }
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Expence Tracker'),
+        title: Text(
+          'Expence Tracker',
+        //   style: TextStyle(
+        //     //this is for the title
+        //     fontWeight: FontWeight.bold,
+        //     fontSize: 20,
+        //     color: kDarkColorScheme.scrim,
+        //   ),
+        // 
+        ),
         actions: [
           IconButton(
             onPressed: _openAddExpenceOverlay,
@@ -104,7 +115,10 @@ class _ExpencesState extends State<Expenses> {
       ),
       body: Column(
         children: [
-          const Text('chart'),
+          Chart(expenses: _registerExpences),
+          //this here is using the charrt widget that was created by the teacher
+          // i pass _registerExpences here to pass all the recorded expences
+
           Expanded(
             child: mainContent,
           ),

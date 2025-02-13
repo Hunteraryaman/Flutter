@@ -20,7 +20,11 @@ class ExpensesItem extends StatelessWidget {
             children: [
               Text(
                 expense.title,
-                style: Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 16),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge!
+                    .copyWith(fontSize: 16),
+                //this is how we acces the theme we set to use certain value from them
               ),
               const SizedBox(
                 height: 4,
@@ -29,6 +33,11 @@ class ExpensesItem extends StatelessWidget {
                 children: [
                   Text(
                     '\$${expense.amount.toStringAsFixed(2)}',
+
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall!
+                        .copyWith(fontSize: 14),
                     //this sets the limit to 2decimal places
                   ),
                   const Spacer(), //this is a widget that takes all the remaining space after the space for the diff widgets have been alocagted
@@ -38,8 +47,13 @@ class ExpensesItem extends StatelessWidget {
                       const SizedBox(
                         width: 8,
                       ),
-                      Text(expense
-                          .formatedDate), //this is getter so no parenthesis
+                      Text(
+                        expense.formatedDate,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodySmall!
+                            .copyWith(fontSize: 14),
+                      ), //this is getter so no parenthesis
                     ],
                   )
                 ],
