@@ -36,7 +36,7 @@ class Chart extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDarkMode =
         MediaQuery.of(context).platformBrightness == Brightness.dark;
-        //this returns true if it is in dark more and false otherwise
+    //this returns true if it is in dark more and false otherwise
 //this is used to get some info about the environment in which your app is running
 //this is used here to find what the brightness of the platform is
 //if it is running in dark or light mode

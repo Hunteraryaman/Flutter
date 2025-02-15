@@ -1,5 +1,7 @@
 import 'package:expence_tracker/widgets/expenses.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
 // import 'package:flutter/services.dart';
 
 var kColorScheme = ColorScheme.fromSeed(
@@ -13,6 +15,23 @@ var kDarkColorScheme = ColorScheme.fromSeed(
   seedColor: const Color.fromARGB(2, 61, 0, 0),
 );
 void main() {
+//   WidgetsFlutterBinding.ensureInitialized();
+// //  this is require to make sure that locking the orientation and then running the app works as intended
+//   //this gives a future
+//   //future provides a then method which then wants a function as a value which will be executed once the future is done with the task
+//   SystemChrome.setPreferredOrientations(
+//     [
+//       //this takes a list of all orientations that we allow
+//       //this prevents the app from adjusting to the other orientation of the device
+//       DeviceOrientation.portraitUp,
+//       // DeviceOrientation.portraitDown,
+//       //this disabled means that the app will not be able to rotate to the other orientation
+//     ],
+//   ).then(
+//     (fn) {
+// //this then also recieves another function as a input itself but we dont need to worry about it as we dont need to do anything with that function so we just have to accept it
+
+//run app only executes once the future is done with the task that is once the orientaion is locked
   runApp(
     MaterialApp(
       darkTheme: ThemeData.dark().copyWith(
@@ -25,7 +44,6 @@ void main() {
           shadowColor: kDarkColorScheme.onSurface,
           // color: kDarkColorScheme.primaryFixedDim,
           color: kDarkColorScheme.secondary,
-
 
           margin: const EdgeInsets.symmetric(
             horizontal: 16,
@@ -106,4 +124,6 @@ void main() {
       home: const Expenses(),
     ),
   );
+  // },
+  // );
 }

@@ -35,6 +35,9 @@ class _ExpencesState extends State<Expenses> {
 
   void _openAddExpenceOverlay() {
     showModalBottomSheet(
+      useSafeArea: true,
+
+//this makes sure that the modal stays away from device features like notch and camera that might affect the ui
       isScrollControlled: true, //this makes it fullscreen
       context: context,
       builder: (ctx) => NewExpence(
@@ -82,6 +85,10 @@ class _ExpencesState extends State<Expenses> {
 
   @override
   Widget build(BuildContext context) {
+    //build method executes again when you rotate the device
+
+    final width = MediaQuery.of(context).size.width;
+
     Widget mainContent = const Center(
       child: Text(
         'No Expence in the list please add some',
@@ -96,15 +103,15 @@ class _ExpencesState extends State<Expenses> {
     }
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Expence Tracker',
-        //   style: TextStyle(
-        //     //this is for the title
-        //     fontWeight: FontWeight.bold,
-        //     fontSize: 20,
-        //     color: kDarkColorScheme.scrim,
-        //   ),
-        // 
+          //   style: TextStyle(
+          //     //this is for the title
+          //     fontWeight: FontWeight.bold,
+          //     fontSize: 20,
+          //     color: kDarkColorScheme.scrim,
+          //   ),
+          //
         ),
         actions: [
           IconButton(
@@ -113,20 +120,33 @@ class _ExpencesState extends State<Expenses> {
           )
         ],
       ),
-      body: Column(
-        children: [
-          Chart(expenses: _registerExpences),
-          //this here is using the charrt widget that was created by the teacher
-          // i pass _registerExpences here to pass all the recorded expences
+      body: width < 600
+          ? Column(
+              children: [
+                Chart(expenses: _registerExpences),
+                //this here is using the charrt widget that was created by the teacher
+                // i pass _registerExpences here to pass all the recorded expences
 
-          Expanded(
-            child: mainContent,
-          ),
-          //expanded restricts the size to the size of the parent column
-          //this displays a column which makes it a column inside a column
-          //flutter doesn't know how to give space to the child column or how to ristrict it
-        ],
-      ),
+                Expanded(
+                  child: mainContent,
+                ),
+                //expanded restricts the size to the size of the parent column
+                //this displays a column which makes it a column inside a column
+                //flutter doesn't know how to give space to the child column or how to ristrict it
+              ],
+            )
+          : Row(
+              children: [
+                Expanded(
+                  //this expanded is needed as the chart has a double.infinity width and so does the row
+                  //to counteract this we use expanded
+                  child: Chart(expenses: _registerExpences),
+                ),
+                Expanded(
+                  child: mainContent,
+                ),
+              ],
+            ),
     );
   }
 }

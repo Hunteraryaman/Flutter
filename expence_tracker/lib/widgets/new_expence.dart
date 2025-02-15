@@ -1,4 +1,11 @@
+import 'dart:io';
+
 import 'package:expence_tracker/models/expense.dart';
+import 'package:expence_tracker/widgets/modalview/amount.dart';
+import 'package:expence_tracker/widgets/modalview/cancel_save.dart';
+import 'package:expence_tracker/widgets/modalview/date_picker.dart';
+import 'package:expence_tracker/widgets/modalview/title.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
 
@@ -31,7 +38,6 @@ class _NewExpenceState extends State<NewExpence> {
     final now = DateTime.now();
     // final firstDate=DateTime(now.year-1,now.date);
     final firstDate = DateTime(now.year - 1, now.month, now.day);
-
     final pickedDate = await showDatePicker(
       //this yealds a future object
       //awaits says to wait for value before storing
@@ -56,21 +62,17 @@ class _NewExpenceState extends State<NewExpence> {
   //   );
   // }
 
-  void _submitExpenceData() {
-    final enteredAmount = double.tryParse(_amountControler.text);
-    //this returns null if it is not able to convert the sting into double`
-    final amountIsInvalid = enteredAmount == null || enteredAmount <= 0;
-    //this is used to determin if value is valid or not
-    // we use this to check and then give the value needed to be stored like true or false
-    if (_titleControler.text.trim().isEmpty ||
-        amountIsInvalid ||
-        _selectedDate == null) {
-      //show error
-      showDialog(
+  void _showDialog() {
+    if (Platform.isIOS) //this is used to check if the platform is ios or not
+    {
+      showCupertinoDialog(
+        //!this is used to show a ios styled dialog box
         context: context,
-        builder: (ctx) => AlertDialog(
+        builder: (ctx) => CupertinoAlertDialog(
           title: const Text('Invalid input'),
-          content: const Text('Please make sure all items are entered',),
+          content: const Text(
+            'Please make sure all items are entered',
+          ),
           actions: [
             TextButton(
               onPressed: () {
@@ -82,6 +84,39 @@ class _NewExpenceState extends State<NewExpence> {
           ],
         ),
       );
+    } else {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('Invalid input'),
+          content: const Text(
+            'Please make sure all items are entered',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+                //ctx is used as we want to close the dialog and henc3e provide its context
+              },
+              child: const Text('Okay'),
+            )
+          ],
+        ),
+      );
+    }
+  }
+
+  void _submitExpenceData() {
+    final enteredAmount = double.tryParse(_amountControler.text);
+    //this returns null if it is not able to convert the sting into double`
+    final amountIsInvalid = enteredAmount == null || enteredAmount <= 0;
+    //this is used to determin if value is valid or not
+    // we use this to check and then give the value needed to be stored like true or false
+    if (_titleControler.text.trim().isEmpty ||
+        amountIsInvalid ||
+        _selectedDate == null) {
+      //show error
+      _showDialog();
       return;
     }
 
@@ -110,7 +145,7 @@ class _NewExpenceState extends State<NewExpence> {
   @override
   void dispose() {
     _titleControler.dispose();
-    // _amountControler.dispose();
+    _amountControler.dispose();
     //this is used to delete the controler to free the memory
     //as it does not automatically close we need to close it manually by disposing it
     super.dispose();
@@ -118,128 +153,169 @@ class _NewExpenceState extends State<NewExpence> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 48, 16, 16),
-      //this 48 is to manage the spacing in the top
-      child: Column(
-        children: [
-          TextField(
-            controller: _titleControler, //this automatically stores the text
-            // onChanged:
-            // _saveTitleInput, //this saves the text entered whenever the text is changed
-            maxLength: 50,
-            decoration: const InputDecoration(
-              label: Text('Title'),
-            ),
-            // keyboardType: TextInputType
-            // .emailAddress, //this opens a keyboard optimised for email
-          ),
-          // const Spacer(),
-          // const Expanded(
-          //   child: Row(
-          //     children: [
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: _amountControler,
-                  // maxLength: 20,//this is not nescessary
-                  decoration: const InputDecoration(
-                    prefixText:
-                        '\$ ', //trhis adds a doller sign in front of the amount entered
-                    label: Text('Amount'),
-                  ),
-                  keyboardType: TextInputType.number,
-                ),
-              ),
-              // const Spacer(),
-              const SizedBox(
-                width: 16,
-              ),
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      _selectedDate == null
-                          ? 'No Selected data'
-                          : formater.format(_selectedDate!),
-                      style: TextStyle(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .error
-                            .withValues(alpha: 0.7),
-                      ),
-                    ),
-                    // ! tells dart that the value will never be null
-                    IconButton(
-                      onPressed: _presentDatePicker,
-                      icon: const Icon(Icons.calendar_month),
-                    )
-                  ],
-                ),
-              )
-            ],
-          ),
-          //     ],
-          //   ),
-          // ),
-          const SizedBox(
-            height: 10,
-          ),
-          Row(
-            children: [
-              DropdownButton(
-                  value: _selectedCategory,
-                  items: Category.values
-                      //this values property gives a list of all the values that make up thghe enum
-                      .map(
-                        //map is used to transform it from enum to dropdown menuitem
-                        //this takes the category item and retursns the dropdown menuitem
-                        (category) => DropdownMenuItem(
-                          //child defines what will be shown on the screen
-                          //value is used to store the selected value it is only stored internally
-                          value: category,
-                          child: Text(
-                            category.name.toUpperCase(),
-                            style: Theme.of(context).textTheme.bodyLarge,
-                            // .copyWith(
-                            // color:
-                            // const Color.fromARGB(122, 254, 254, 254),
-                            // Theme.of(context).colorScheme.error.withValues(alpha: 0.7),
-                            //colorScheme.onSurface,
-                            // ),
-                          ),
-                          //name gives the string value of the category enum
+    //from this we can get the amount of space that is taken by the keyboard
+
+    final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
+    //this is a objecdt that contains extarar info about ui elements that might be overlapping certain elements of the screen
+    return LayoutBuilder(
+      builder: (ctx, constraints) {
+        return SizedBox(
+          height: double.infinity,
+          // width: double.infinity,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(16, 16, 16, keyboardSpace + 16),
+              //this makes sure that the padding is added to the bottom if the keyboard is open and hence the modal overlay is not hidden by the keyboard and it shifts upwards
+              //this 48 is to manage the spacing in the top
+              child: Column(
+                children: [
+                  if (constraints.maxWidth > 600) // ! first row
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                            child: TitleText(
+                                textEditingController: _titleControler)),
+                        const SizedBox(
+                          width: 16,
                         ),
-                      )
-                      //to list then converts the map of dropdownmenu items into a list
-                      .toList(),
-                  onChanged: (value) {
-                    if (value == null) {
-                      return;
-                      //this is if the user didnt select anything
-                    }
-                    setState(() {
-                      _selectedCategory = value;
-                    });
-                  }),
-              const Spacer(),
-              TextButton(
-                  onPressed: () {
-                    Navigator.pop(context); //this closes the modal overlay
-                    //this uses the context value from build to remove the overlay
-                  },
-                  child: const Text('Cancel')),
-              ElevatedButton(
-                onPressed: _submitExpenceData,
-                child: const Text('Save'),
+                        Expanded(
+                            child: Amount(
+                                textEditingController: _amountControler)),
+                      ],
+                    )
+                  else
+                    TitleText(textEditingController: _titleControler),
+                  // const Spacer(),
+                  // const Expanded(
+                  //   child: Row(
+                  //     children: [
+                  if (constraints.maxWidth > 600) // ! second row
+                    Row(
+                      children: [
+                        DropdownButton(
+                          //!dropdown
+                          value: _selectedCategory,
+                          items: Category.values
+                              //this values property gives a list of all the values that make up thghe enum
+                              .map(
+                                //map is used to transform it from enum to dropdown menuitem
+                                //this takes the category item and retursns the dropdown menuitem
+                                (category) => DropdownMenuItem(
+                                  //child defines what will be shown on the screen
+                                  //value is used to store the selected value it is only stored internally
+                                  value: category,
+                                  child: Text(
+                                    category.name.toUpperCase(),
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge,
+                                    // .copyWith(
+                                    // color:
+                                    // const Color.fromARGB(122, 254, 254, 254),
+                                    // Theme.of(context).colorScheme.error.withValues(alpha: 0.7),
+                                    //colorScheme.onSurface,
+                                    // ),
+                                  ),
+                                  //name gives the string value of the category enum
+                                ),
+                              )
+                              //to list then converts the map of dropdownmenu items into a list
+                              .toList(),
+                          onChanged: (value) {
+                            if (value == null) {
+                              return;
+                              //this returns or exits from the dropdown
+                              //this is if the user didnt select anything
+                            }
+                            setState(
+                              () {
+                                _selectedCategory = value;
+                              },
+                            );
+                          },
+                        ),
+                        const Spacer(),
+                        DatePicker(
+                            presentDatePicker: _presentDatePicker,
+                            selectedDate: _selectedDate),
+                      ],
+                    )
+                  else
+                    Row(
+                      children: [
+                        Expanded(
+                            child: Amount(
+                                textEditingController: _amountControler)),
+                        //     // const Spacer(),
+                        const SizedBox(
+                          width: 16,
+                        ),
+
+                        DatePicker(
+                            presentDatePicker: _presentDatePicker,
+                            selectedDate: _selectedDate),
+                      ],
+                    ),
+                  // ],
+                  //   ),
+                  // ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+
+                  if (constraints.maxWidth > 600) //!third row
+                    CancelSave(submitExpenceData: _submitExpenceData)
+                  else
+                    Row(
+                      children: [
+                        DropdownButton(
+                            //!dropdown
+                            value: _selectedCategory,
+                            items: Category.values
+                                //this values property gives a list of all the values that make up thghe enum
+                                .map(
+                                  //map is used to transform it from enum to dropdown menuitem
+                                  //this takes the category item and retursns the dropdown menuitem
+                                  (category) => DropdownMenuItem(
+                                    //child defines what will be shown on the screen
+                                    //value is used to store the selected value it is only stored internally
+                                    value: category,
+                                    child: Text(
+                                      category.name.toUpperCase(),
+                                      style:
+                                          Theme.of(context).textTheme.bodyLarge,
+                                      // .copyWith(
+                                      // color:
+                                      // const Color.fromARGB(122, 254, 254, 254),
+                                      // Theme.of(context).colorScheme.error.withValues(alpha: 0.7),
+                                      //colorScheme.onSurface,
+                                      // ),
+                                    ),
+                                    //name gives the string value of the category enum
+                                  ),
+                                )
+                                //to list then converts the map of dropdownmenu items into a list
+                                .toList(),
+                            onChanged: (value) {
+                              if (value == null) {
+                                return;
+                                //this is if the user didnt select anything
+                              }
+                              setState(() {
+                                _selectedCategory = value;
+                              });
+                            }),
+                        Expanded(
+                            child: CancelSave(
+                                submitExpenceData: _submitExpenceData)),
+                      ],
+                    )
+                ],
               ),
-            ],
-          )
-        ],
-      ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
